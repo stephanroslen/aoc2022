@@ -1,0 +1,3 @@
+[submodule "aoclib"]
+	path = aoclib
+	url = git@gitlab.com:stephanroslen/aoclib.git
