@@ -1,7 +1,7 @@
 FROM ubuntu:jammy
 
 RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y build-essential cmake gcc-12 g++-12 gdb git ninja-build
+RUN apt-get install -y --no-install-recommends build-essential ca-certificates cmake gcc-12 g++-12 gdb git ninja-build
 
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 10
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 20
@@ -15,6 +15,6 @@ RUN mkdir /src && \
     cd fmt && \
     mkdir build && \
     cd build && \
-    cmake -G Ninja -DFMT_DOC=Off -DFMT_TEST=Off .. && \
+    cmake -G Ninja -DFMT_DOC=Off -DFMT_TEST=Off -DCMAKE_BUILD_TYPE=RelWithDebInfo .. && \
     ninja -j $(nproc) && \
     ninja install
