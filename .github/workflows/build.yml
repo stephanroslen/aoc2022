@@ -1,4 +1,4 @@
-name: Build
+name: Do stuff
 
 on: push
 
@@ -38,7 +38,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  build:
+  do-stuff:
     needs: docker-image
     runs-on: ubuntu-latest
     container: ghcr.io/${{ github.repository }}/build:${{ github.sha }}
@@ -52,5 +52,21 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -G Ninja ..
+          cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
           ninja -j $(nproc)
+
+      - name: run
+        run: |
+          touch results.txt
+          for day in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+          do
+            echo "------ day $day ------" >> results.txt
+            ./build/day${day} < ./day${day}/${day}.txt >> results.txt
+            echo "" >> results.txt
+          done
+
+      - name: upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: results.txt
+          path: results.txt
